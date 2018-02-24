@@ -16,6 +16,7 @@ import defaultMenuRenderer from './utils/defaultMenuRenderer';
 
 import Option from './Option';
 import Value from './Value';
+import Dropdown from './Dropdown';
 
 const stringifyValue = value =>
 	typeof value === 'string'
@@ -1100,21 +1101,19 @@ class Select extends React.Component {
 			return null;
 		}
 
+		const Dropdown = this.props.dropdownComponent;
+
 		return (
-			<div ref={ref => this.menuContainer = ref} className="Select-menu-outer" style={this.props.menuContainerStyle}>
-				<div
-					className="Select-menu"
-					id={this._instancePrefix + '-list'}
-					onMouseDown={this.handleMouseDownOnMenu}
-					onScroll={this.handleMenuScroll}
-					ref={ref => this.menu = ref}
-					role="listbox"
-					style={this.props.menuStyle}
-					tabIndex={-1}
-				>
-					{menu}
+			<Dropdown>
+				<div ref={ref => this.menuContainer = ref} className="Select-menu-outer" style={this.props.menuContainerStyle}>
+					<div ref={ref => this.menu = ref} role="listbox" className="Select-menu" id={this._instancePrefix + '-list'}
+						style={this.props.menuStyle}
+						onScroll={this.handleMenuScroll}
+						onMouseDown={this.handleMouseDownOnMenu}>
+						{menu}
+					</div>
 				</div>
-			</div>
+			</Dropdown>
 		);
 	}
 
@@ -1208,6 +1207,7 @@ Select.propTypes = {
 	deleteRemoves: PropTypes.bool,        // whether delete removes an item if there is no text input
 	delimiter: PropTypes.string,          // delimiter to use to join multiple values for the hidden field value
 	disabled: PropTypes.bool,             // whether the Select is disabled or not
+	dropdownComponent: React.PropTypes.func, 	 // dropdown component to contain dropdown
 	escapeClearsValue: PropTypes.bool,    // whether escape clears the value when the menu is closed
 	filterOption: PropTypes.func,         // method to filter a single option (option, filterString)
 	filterOptions: PropTypes.any,         // boolean to enable default filtering or function to filter the options array ([options], filterString, [values])
@@ -1280,6 +1280,7 @@ Select.defaultProps = {
 	deleteRemoves: true,
 	delimiter: ',',
 	disabled: false,
+	dropdownComponent: Dropdown,
 	escapeClearsValue: true,
 	filterOptions: defaultFilterOptions,
 	ignoreAccents: true,
